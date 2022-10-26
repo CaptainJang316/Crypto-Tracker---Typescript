@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Chart from "./Chart";
 import Price from "./Price";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
+
 
 const Title = styled.h1`
   font-size: 48px;
@@ -139,26 +142,33 @@ interface PriceData {
 
 function Coin() {
     const { coinID } = useParams();
-    const [loading, setLoading] = useState(true);
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
-
+  
     const priceMatch = useMatch("/:coinID/price");
     const chartMatch = useMatch("/:coinID/chart");
 
-    useEffect(() => {
-      (async () => {
-        const infoData = await (
-          await fetch(`https://api.coinpaprika.com/v1/coins/${coinID}`)
-        ).json();
-        const priceData = await(
-          await fetch(`https://api.coinpaprika.com/v1/tickers/${coinID}`)
-        ).json();
-        setInfo(infoData);
-        setPriceInfo(priceInfo);
-        setLoading(false);
-      })();
-    }, [coinID]);  
+    // useEffect(() => {
+    //   (async () => {
+    //     const infoData = await (
+    //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinID}`)
+    //     ).json();
+    //     const priceData = await(
+    //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinID}`)
+    //     ).json();
+    //     setInfo(infoData);
+    //     setPriceInfo(priceInfo);
+    //     setLoading(false);
+    //   })();
+    // }, [coinID]);  
+    const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+      ["info", coinID],
+      () => fetchCoinInfo(coinID!)
+    );
+    const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+      ["tickers", coinID],
+      () => fetchCoinTickers(coinID!)
+    );
+    const loading = infoLoading || tickersLoading;
+  
 
     console.log("coinId: ", coinID);
 
@@ -172,33 +182,33 @@ function Coin() {
         <Container>
             <Header>
                 {/* state가 존재하면 name을 가져오고, 아니면 "Loading..." 을 보여줘라 */}
-                <Title>{state?.name ? state.name : loading ? "Loading..." : null}</Title>
+                <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
             </Header>
             {loading? <Loader>Loading...</Loader> 
             : <>
                 <Overview>
                   <OverviewItem>
                     <span>Rank:</span>
-                    <span>{info?.rank}</span>
+                    <span>{infoData?.rank}</span>
                   </OverviewItem>
                   <OverviewItem>
                     <span>Symbol:</span>
-                    <span>${info?.symbol}</span>
+                    <span>${infoData?.symbol}</span>
                   </OverviewItem>
                   <OverviewItem>
                     <span>Open Source:</span>
-                    <span>{info?.open_source ? "Yes" : "No"}</span>
+                    <span>{infoData?.open_source ? "Yes" : "No"}</span>
                   </OverviewItem>
                 </Overview>
-                <Description>{info?.description}</Description>
+                <Description>{infoData?.description}</Description>
                 <Overview>
                   <OverviewItem>
                     <span>Total Suply:</span>
-                    <span>{priceInfo?.total_supply}</span>
+                    <span>{tickersData?.total_supply}</span>
                   </OverviewItem>
                   <OverviewItem>
                     <span>Max Supply:</span>
-                    <span>{priceInfo?.max_supply}</span>
+                    <span>{tickersData?.max_supply}</span>
                   </OverviewItem>
                 </Overview>
 
