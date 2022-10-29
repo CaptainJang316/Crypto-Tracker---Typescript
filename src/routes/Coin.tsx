@@ -141,36 +141,37 @@ interface PriceData {
 }
 
 function Coin() {
-    const { coinID } = useParams();
+    const { coinId } = useParams();
+    console.log("coinId????: ", coinId);
   
-    const priceMatch = useMatch("/:coinID/price");
-    const chartMatch = useMatch("/:coinID/chart");
+    const priceMatch = useMatch("/:coinId/price");
+    const chartMatch = useMatch("/:coinId/chart");
 
     // useEffect(() => {
     //   (async () => {
     //     const infoData = await (
-    //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinID}`)
+    //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
     //     ).json();
     //     const priceData = await(
-    //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinID}`)
+    //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
     //     ).json();
     //     setInfo(infoData);
     //     setPriceInfo(priceInfo);
     //     setLoading(false);
     //   })();
-    // }, [coinID]);  
+    // }, [coinId]);  
     const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
-      ["info", coinID],
-      () => fetchCoinInfo(coinID!)
+      ["info", coinId],
+      () => fetchCoinInfo(coinId!)
     );
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
-      ["tickers", coinID],
-      () => fetchCoinTickers(coinID!)
+      ["tickers", coinId],
+      () => fetchCoinTickers(coinId!)
     );
     const loading = infoLoading || tickersLoading;
   
 
-    console.log("coinId: ", coinID);
+    console.log("coinId: ", coinId);
 
     const location = useLocation();
     const name = location.state as RouteState;
@@ -214,13 +215,13 @@ function Coin() {
 
                 <Tabs>
                   <Tab isActive={chartMatch != null}>
-                    <Link to = {`/:coinID/chart`}>Chart</Link>
+                    <Link to = {`/${coinId}/chart`}>Chart</Link>
                   </Tab>
                   <Tab isActive={priceMatch != null}>
-                    <Link to = {`/${coinID}/price`}>Price</Link>
+                    <Link to = {`/${coinId}/price`}>Price</Link>
                   </Tab>
                 </Tabs>
-                <Outlet/>
+                <Outlet context={{coinId}}/>
               </>
               }
         </Container>

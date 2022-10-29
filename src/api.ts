@@ -1,4 +1,5 @@
 const BASE_URL = `https://api.coinpaprika.com/v1`;
+const NEW_BASE_URL = `https://ohlcv-api.nomadcoders.workers.dev`
 
 
 export function fetchCoins() {
@@ -7,14 +8,23 @@ export function fetchCoins() {
     );
 }
 
-export function fetchCoinInfo(coinID: string) {
-    return fetch(`${BASE_URL}/coins/${coinID}`).then((response) => 
+export function fetchCoinInfo(coinId: string) {
+    return fetch(`${BASE_URL}/coins/${coinId}`).then((response) => 
         response.json()
     );
 }
 
-export function fetchCoinTickers(coinID: string) {
-    return fetch(`${BASE_URL}/tickers/${coinID}`).then((response) => 
+export function fetchCoinTickers(coinId: string) {
+    return fetch(`${BASE_URL}/tickers/${coinId}`).then((response) => 
         response.json()
     );
+}
+
+export function fetchCoinHistory(coinId: string) {
+    const endDate = Math.floor(Date.now() / 1000);
+    const startDate = endDate - 60 * 60 * 24 * 7 * 2;
+    console.log("asdf");
+    return fetch(
+        `${NEW_BASE_URL}?coinId=${coinId}`
+    ).then((response) => response.json());
 }
