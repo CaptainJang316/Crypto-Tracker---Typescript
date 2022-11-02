@@ -26,10 +26,11 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 15vh;
+  height: 8vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 `;
 
 const Overview = styled.div`
@@ -77,6 +78,17 @@ const Tab = styled.span<{ isActive: boolean }>`
     display: block;
   }
 `;
+
+const BackButton = styled.button`
+  color: white;
+  width: 60px;
+  border: none;
+  margin-top: 20px;
+  padding: 7px 0px 7px 0px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  onclick: 
+`
 
 interface RouteParams {
     coinId: string;
@@ -183,6 +195,10 @@ function Coin() {
     console.log("state: ", state);
     console.log("name: ", name);
 
+    const backButtonClick = () => {
+      window.history.back();
+    }
+
     return (
         <Container>
           <Helmet>
@@ -190,6 +206,9 @@ function Coin() {
               {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
             </title>
           </Helmet>
+            <BackButton onClick={backButtonClick}>
+              Back
+            </BackButton>
             <Header>
                 {/* state가 존재하면 name을 가져오고, 아니면 "Loading..." 을 보여줘라 */}
                 <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
