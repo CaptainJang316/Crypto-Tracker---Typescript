@@ -35,11 +35,16 @@ function Chart() {
             "Loading chart..."
         ) : (
             <ApexChart
-                type="line"
+                type="candlestick"
                 series={[
                     {
                         name: "Price",
-                        data: data?.map((price) => price.close) ?? [],
+                        data: data?.map((price) => {
+                            return {
+                              x: new Date(Number(price.time_close) * 1000).toISOString(),
+                              y: [price.open, price.high, price.low, price.close],  
+                            };
+                        }) ?? [],
                     },
                 ]}
                 options={{
@@ -49,20 +54,17 @@ function Chart() {
                     chart: {
                         height: 300,
                         width: 500,
-                        toolbar: {
-                            show: false,
-                        },
+                        type: 'candlestick',
                         background: "transparent",
                     },
-                    fill: {
-                        type: "gradient",
-                        gradient: { gradientToColors: ["#0be881"], stops: [0, 100] },
-                    },
-                    colors: ["#0fbcf9"],
-                    grid: { show: false },
-                    stroke: {
-                        width: 4,
-                    },
+                    plotOptions: {
+                        candlestick: {
+                          colors: {
+                            upward: '#3C90EB',
+                            downward: '#DF7D46'
+                          },
+                        }
+                      },
                     yaxis: {
                         show: true,
                         axisBorder: {
