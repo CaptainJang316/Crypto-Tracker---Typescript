@@ -5,13 +5,13 @@ export const darkTheme: DefaultTheme = {
     textColor: "white",
     accentColor: "#9c88ff",
     cardBgColor: "transparent",
-    borderColor: "white",
+    borderColor: "1px solid white",
 };
 
 export const lightTheme: DefaultTheme = {
     bgColor: "whitesmoke",
     textColor: "black",
     accentColor: "#9c88ff",
-    cardBgColor: "transparent",
-    borderColor: "black",
+    cardBgColor: "white",
+    borderColor: "1px solid white",
   };
