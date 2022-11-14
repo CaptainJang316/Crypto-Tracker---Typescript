@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 
 function ToDoList() {
-    const { register, watch } = useForm();
+    const { register, watch, handleSubmit, formState } = useForm();
     console.log(register);
-    console.log(watch());
+    console.log("watch: ", watch());
+    console.log("error: ", formState.errors);
+
+    const onValid = (data: any) => {
+        console.log("data: ", data);
+    };
     // const [toDo, setToDo] = useState("");
     // const onChange = (event: React.FormEvent<HTMLInputElement>) => {
     //     const {
@@ -19,13 +24,16 @@ function ToDoList() {
 
     return (
         <div>
-            <form>
-                <input {...register("email")} placeholder="email" />
-                <input {...register("firstName")} placeholder="First Name"/>
-                <input {...register("lastName")} placeholder="last Name/"></input>
-                <input {...register("userName")} placeholder="Username/"></input>
-                <input {...register("password")} placeholder="Password/"></input>
-                <input {...register("password1")} placeholder="Password1/"></input>
+            <form
+                style={{ display: "flex", flexDirection: "column" }} 
+                onSubmit={handleSubmit(onValid)}
+            >
+                <input {...register("email", {required: true})} placeholder="email" />
+                <input {...register("firstName", {required: true})} placeholder="First Name"/>
+                <input {...register("lastName", {required: true})} placeholder="last Name/"></input>
+                <input {...register("userName", {required: true})} placeholder="Username/"></input>
+                <input {...register("password", {required: true, minLength: 5})} placeholder="Password/"></input>
+                <input {...register("password1", {required: true, minLength: 5})} placeholder="Password1/"></input>
                 <button>Add</button>
             </form>
         </div>
